@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------
 #include "Pre.h"
 #include "Dbg.h"
+#include "Core/Trace.h"
 #include <cstdarg>
 
 namespace Oryol {
@@ -12,13 +13,16 @@ struct Dbg::_state* Dbg::state = nullptr;
 //------------------------------------------------------------------------------
 void
 Dbg::Setup() {
+    ORYOL_TRACE_CONTEXT("Dbg::Setup");
     o_assert(!IsValid());
     state = new _state();
+    ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(state, "Dbg::_state");
 }
 
 //------------------------------------------------------------------------------
 void
 Dbg::Discard() {
+    ORYOL_TRACE_CONTEXT("Dbg::Discard");
     o_assert(IsValid());
     delete state;
     state = nullptr;
@@ -78,6 +82,7 @@ Dbg::TextColor(const glm::vec4& c) {
 //------------------------------------------------------------------------------
 void
 Dbg::DrawTextBuffer() {
+    ORYOL_TRACE_CONTEXT("Dbg::DrawTextBuffer");
     o_assert_dbg(IsValid());
     state->debugTextRenderer.drawTextBuffer();
 }

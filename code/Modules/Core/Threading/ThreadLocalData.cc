@@ -33,6 +33,7 @@ ThreadLocalData::PointerTable() {
         // associate with key
         int tableSize = MaxNumSlots * sizeof(void*);
         table = (void**) Memory::Alloc(tableSize);
+        ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(table, "ThreadLocalData::PointerTable");
         Memory::Clear(table, tableSize);
         pthread_setspecific(key, table);
     }

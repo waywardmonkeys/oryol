@@ -5,6 +5,7 @@
     @brief Oryol class annotation macros
 */
 #include "Core/Types.h"
+#include "Core/Trace.h"
 
 /// declare an Oryol class with pool allocator (located inside class declaration)
 #define OryolClassPoolAllocDecl(TYPE) \
@@ -16,7 +17,9 @@ virtual void destroy() {\
 };\
 public:\
 template<typename... ARGS> static Oryol::Ptr<TYPE> Create(ARGS&&... args) {\
-    return Oryol::Ptr<TYPE>(TYPE::allocator.Create(std::forward<ARGS>(args)...));\
+    auto p = TYPE::allocator.Create(std::forward<ARGS>(args)...);\
+    ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(p, #TYPE);\
+    return Oryol::Ptr<TYPE>(p);\
 };\
 
 /// implementation-side macro for Oryol class with pool allocator (located in .cc source file)
@@ -35,7 +38,9 @@ virtual void destroy() {\
 };\
 public:\
 template<typename... ARGS> static Oryol::Ptr<TYPE> Create(ARGS&&... args) {\
-    return Oryol::Ptr<TYPE>(new TYPE(std::forward<ARGS>(args)...));\
+    auto p = new TYPE(std::forward<ARGS>(args)...);\
+    ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(p, #TYPE);\
+    return Oryol::Ptr<TYPE>(p);\
 };
 
 /// implementation-side macro for Oryol class without pool allocator (located in .cc source file)

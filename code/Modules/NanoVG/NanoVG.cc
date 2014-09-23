@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------
 #include "Pre.h"
 #include "NanoVG.h"
+#include "Core/Trace.h"
 #if (ORYOL_OPENGLES2 || ORYOL_OPENGLES3)
 #define NANOVG_GLES2_IMPLEMENTATION
 #elif ORYOL_OSX
@@ -20,8 +21,10 @@ NanoVG::_state* NanoVG::state = nullptr;
 //------------------------------------------------------------------------------
 void
 NanoVG::Setup() {
+    ORYOL_TRACE_CONTEXT("NanoVG::Setup");
     o_assert(!IsValid());
     state = new _state();
+    ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(state, "NanoVG::_state");
     if (!Gfx::IsValid()) {
         o_error("Render module must be setuo before NanoVG!\n");
     }
@@ -30,6 +33,7 @@ NanoVG::Setup() {
 //------------------------------------------------------------------------------
 void
 NanoVG::Discard() {
+    ORYOL_TRACE_CONTEXT("NanoVG::Discard");
     o_assert(IsValid());
     delete state;
     state = nullptr;
@@ -44,6 +48,7 @@ NanoVG::IsValid() {
 //------------------------------------------------------------------------------
 NVGcontext*
 NanoVG::CreateContext(int flags) {
+    ORYOL_TRACE_CONTEXT("NanoVG::CreateConetxt");
     o_assert_dbg(IsValid());
 
     NVGcontext* ctx = nullptr;
@@ -60,6 +65,7 @@ NanoVG::CreateContext(int flags) {
 //------------------------------------------------------------------------------
 void
 NanoVG::DeleteContext(NVGcontext* ctx) {
+    ORYOL_TRACE_CONTEXT("NanoVG::DeleteConetxt");
     o_assert_dbg(IsValid());
     o_assert_dbg(ctx);
     
@@ -75,6 +81,7 @@ NanoVG::DeleteContext(NVGcontext* ctx) {
 //------------------------------------------------------------------------------
 void
 NanoVG::BeginFrame(NVGcontext* ctx) {
+    ORYOL_TRACE_CONTEXT("NanoVG::BeginFrame");
     o_assert_dbg(IsValid());
     o_assert_dbg(ctx);
     
@@ -89,6 +96,7 @@ NanoVG::BeginFrame(NVGcontext* ctx) {
 //------------------------------------------------------------------------------
 void
 NanoVG::EndFrame(NVGcontext* ctx) {
+    ORYOL_TRACE_CONTEXT("NanoVG::EndFrame");
     o_assert_dbg(IsValid());
     o_assert_dbg(ctx);
 
@@ -99,6 +107,7 @@ NanoVG::EndFrame(NVGcontext* ctx) {
 //------------------------------------------------------------------------------
 int
 NanoVG::CreateImage(NVGcontext* ctx, const Ptr<Stream>& fileData, int flags) {
+    ORYOL_TRACE_CONTEXT("NanoVG::CreateImage");
     o_assert_dbg(IsValid());
     o_assert_dbg(ctx);
     o_assert_dbg(fileData.isValid() && (fileData->Size() > 0));
@@ -117,6 +126,7 @@ NanoVG::CreateImage(NVGcontext* ctx, const Ptr<Stream>& fileData, int flags) {
 //------------------------------------------------------------------------------
 void
 NanoVG::DeleteImage(NVGcontext* ctx, int imgHandle) {
+    ORYOL_TRACE_CONTEXT("NanoVG::DeleteImage");
     o_assert_dbg(IsValid());
     o_assert_dbg(ctx);
 
@@ -128,6 +138,7 @@ NanoVG::DeleteImage(NVGcontext* ctx, int imgHandle) {
 //------------------------------------------------------------------------------
 int
 NanoVG::CreateFont(NVGcontext* ctx, const char* name, const Ptr<Stream>& fileData) {
+    ORYOL_TRACE_CONTEXT("NanoVG::CreateFont");
     o_assert_dbg(IsValid());
     o_assert_dbg(ctx);
     o_assert_dbg(name);

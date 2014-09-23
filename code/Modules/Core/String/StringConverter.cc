@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------
 #include "Pre.h"
 #include "Core/Assert.h"
+#include "Core/Trace.h"
 #include "StringConverter.h"
 #include "Ext/ConvertUTF/ConvertUTF.h"
 #include <cstdlib>
@@ -113,6 +114,7 @@ StringConverter::WideToUTF8(const wchar_t* wide, int32 numWideChars) {
         else {
             int32 dstBufSize = (numWideChars * MaxUTF8Size) + 1;
             unsigned char* dstBuf = (unsigned char*) Memory::Alloc(dstBufSize);
+            ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(dstBuf, "StringConverter::buffer");
             if (0 < StringConverter::WideToUTF8(wide, numWideChars, dstBuf, dstBufSize)) {
                 converted = (char*) dstBuf;
             }

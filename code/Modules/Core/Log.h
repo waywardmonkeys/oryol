@@ -58,6 +58,6 @@ public:
 
 private:
     /// generic vprint-style method
-    static void vprint(Level l, const char* msg, va_list args) __attribute__((format(printf, 2, 0)));
+    static void vprint(Level l, const char* lvlName, const char* msg, va_list args) __attribute__((format(printf, 2, 0)));
 };
 } // namespace Oryol

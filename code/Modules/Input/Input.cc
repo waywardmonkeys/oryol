@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------
 #include "Pre.h"
 #include "Input.h"
+#include "Core/Trace.h"
 
 namespace Oryol {
 
@@ -11,14 +12,17 @@ struct Input::_state* Input::state = nullptr;
 //------------------------------------------------------------------------------
 void
 Input::Setup(const InputSetup& setup) {
+    ORYOL_TRACE_CONTEXT("Input::Setup");
     o_assert(!IsValid());
     state = new _state();
+    ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(state, "Input::_state");
     state->inputManager.setup(setup);
 }
 
 //------------------------------------------------------------------------------
 void
 Input::Discard() {
+    ORYOL_TRACE_CONTEXT("Input::Discard");
     o_assert(IsValid());
     state->inputManager.discard();
     delete state;

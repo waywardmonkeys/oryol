@@ -5,6 +5,7 @@
 #include <cstring>
 #include "String.h"
 #include "StringAtom.h"
+#include "Core/Trace.h"
 
 namespace Oryol {
 
@@ -105,6 +106,7 @@ void
 String::alloc(int32 len) {
     o_assert(len > 0);
     this->data = (StringData*) Memory::Alloc(sizeof(StringData) + len + 1);
+    ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(this->data, "StringData");
     new(this->data) StringData();
     this->addRef();
     this->data->length = len;

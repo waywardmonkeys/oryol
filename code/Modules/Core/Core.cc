@@ -5,6 +5,7 @@
 #include "Core.h"
 #include "Core/RunLoop.h"
 #include "Core/Ptr.h"
+#include "Core/Trace.h"
 
 namespace Oryol {
     
@@ -15,8 +16,10 @@ ORYOL_THREADLOCAL_PTR(RunLoop) Core::threadPostRunLoop = nullptr;
 //------------------------------------------------------------------------------
 void
 Core::Setup() {
+    ORYOL_TRACE_CONTEXT("Core::Setup");
     o_assert(!IsValid());
     state = new _state();
+    ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(state, "Core::_state");
     state->mainThreadId = std::this_thread::get_id();
     
     // setup the before-frame runloop
@@ -33,6 +36,7 @@ Core::Setup() {
 //------------------------------------------------------------------------------
 void
 Core::Discard() {
+    ORYOL_TRACE_CONTEXT("Core::Discard");
     o_assert(IsValid());
     o_assert(threadPreRunLoop);
     o_assert(threadPostRunLoop);

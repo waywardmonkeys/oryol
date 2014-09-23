@@ -6,6 +6,7 @@
 #include <new>
 #include "WideString.h"
 #include "Core/Memory/Memory.h"
+#include "Core/Trace.h"
 
 namespace Oryol {
 
@@ -27,6 +28,7 @@ WideString::create(const wchar_t* ptr, int32 numChars) {
     o_assert(0 != ptr);
     if ((ptr[0] != 0) && (numChars > 0)) {
         this->data = (StringData*) Memory::Alloc(sizeof(StringData) + ((numChars + 1) * sizeof(wchar_t)));
+        ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(this->data, "WideStringData");
         new(this->data) StringData();
         this->addRef();
         this->data->length = numChars;

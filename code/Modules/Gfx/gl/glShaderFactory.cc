@@ -8,6 +8,7 @@
 #include "Gfx/gl/gl_impl.h"
 #include "Core/String/StringBuilder.h"
 #include "Core/Memory/Memory.h"
+#include "Core/Trace.h"
 #include "Gfx/Core/Enums.h"
 
 namespace Oryol {
@@ -128,6 +129,7 @@ glShaderFactory::compileShader(ShaderType::Code type, const String& src) const {
             
             // now print the info log
             GLchar* shdLogBuf = (GLchar*) Memory::Alloc(logLength);
+            ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(logBuffer, "glGetShaderInfoLog::buffer");
             ::glGetShaderInfoLog(glShader, logLength, &logLength, shdLogBuf);
             ORYOL_GL_CHECK_ERROR();
             Log::Info("SHADER LOG: %s\n\n", shdLogBuf);

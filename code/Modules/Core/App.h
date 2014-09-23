@@ -37,6 +37,7 @@
 #include "Core/AppState.h"
 #include "Core/String/WideString.h"
 #include "Core/Containers/Set.h"
+#include "Core/Trace.h"
 #if ORYOL_WINDOWS
 #define VC_EXTRALEAN (1)
 #define WIN32_LEAN_AND_MEAN (1)
@@ -150,6 +151,7 @@ void PNaclAppCreator() {\
 #define OryolMain(clazz) \
 Oryol::Args OryolArgs; \
 int main(int argc, const char** argv) { \
+    ORYOL_TRACE_CONFIGURE("http://localhost:5000/", #clazz); \
     OryolArgs = Oryol::Args(argc, argv); \
     clazz* app = new clazz(); \
     app->StartMainLoop(); \

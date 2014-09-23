@@ -5,6 +5,7 @@
 #include "App.h"
 #include "Core/Core.h"
 #include "Core/RunLoop.h"
+#include "Core/Trace.h"
 #if ORYOL_EMSCRIPTEN
 #include <emscripten/emscripten.h>
 #endif
@@ -102,6 +103,11 @@ App::remBlocker(AppState::Code blockedState) {
 //------------------------------------------------------------------------------
 void
 App::onFrame() {
+    ORYOL_TRACE_CONTEXT("App::onFrame");
+    ORYOL_TRACE_FRAME();
+    ORYOL_TRACE_REPORT_MEMORY_LAYOUT();
+    ORYOL_TRACE_REPORT_OFF_HEAP_DATA();
+
     // state transition?
     if ((this->nextState != AppState::InvalidAppState) && (this->nextState != this->curState)) {
         // check if the next state is blocked

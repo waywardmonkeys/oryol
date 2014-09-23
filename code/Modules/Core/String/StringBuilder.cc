@@ -6,6 +6,7 @@
 #include <cstdio>
 #include "StringBuilder.h"
 #include "Core/Memory/Memory.h"
+#include "Core/Trace.h"
 
 #if ORYOL_WINDOWS
 #define o_strtok strtok_s
@@ -82,6 +83,7 @@ StringBuilder::ensureRoom(int32 numBytes) {
         int32 growBy = (numBytes < minGrowSize) ? minGrowSize : numBytes;
         const int32 newCapacity = this->capacity + growBy;
         char* newBuffer = (char*) Memory::Alloc(newCapacity);
+        ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(newBuffer, "StringBuilder::buffer");
         if (this->buffer) {
             // copy over old content and free old buffer
             std::strcpy(newBuffer, this->buffer);

@@ -6,6 +6,7 @@
 #include "Core/Log.h"
 #include "Core/Assert.h"
 #include "Core/Logger.h"
+#include "Core/Trace.h"
 #include "Core/Threading/RWLock.h"
 #include "Core/Containers/Array.h"
 #if ORYOL_WINDOWS
@@ -18,7 +19,7 @@
 #include "Core/pnacl/pnaclInstance.h"
 #endif
 
-#if ORYOL_WINDOWS || ORYOL_PNACL
+#if ORYOL_WINDOWS || ORYOL_PNACL || ORYOL_TRACING
 const Oryol::int32 LogBufSize = 8096;
 #endif
 
@@ -71,7 +72,7 @@ Log::Dbg(const char* msg, ...) {
     if (curLogLevel >= Level::Dbg) {
         va_list args;
         va_start(args, msg);
-        Log::vprint(Level::Dbg, msg, args);
+        Log::vprint(Level::Dbg, "Debug", msg, args);
         va_end(args);
     }
 }
@@ -82,7 +83,7 @@ Log::Info(const char* msg, ...) {
     if (curLogLevel >= Level::Info) {
         va_list args;
         va_start(args, msg);
-        Log::vprint(Level::Info, msg, args);
+        Log::vprint(Level::Info, "Info", msg, args);
         va_end(args);
     }
 }
@@ -93,7 +94,7 @@ Log::Warn(const char* msg, ...) {
     if (curLogLevel >= Level::Warn) {
         va_list args;
         va_start(args, msg);
-        Log::vprint(Level::Warn, msg, args);
+        Log::vprint(Level::Warn, "Warn", msg, args);
         va_end(args);
     }
 }
@@ -104,14 +105,14 @@ Log::Error(const char* msg, ...) {
     if (curLogLevel >= Level::Error) {
         va_list args;
         va_start(args, msg);
-        Log::vprint(Level::Error, msg, args);
+        Log::vprint(Level::Error, "Error", msg, args);
         va_end(args);
     }
 }
 
 //------------------------------------------------------------------------------
 void
-Log::vprint(Level lvl, const char* msg, va_list args) {
+Log::vprint(Level lvl, const char* lvlName, const char* msg, va_list args) {
     lock.LockRead();
     if (loggers.Empty()) {
         #if ORYOL_ANDROID
@@ -125,7 +126,7 @@ Log::vprint(Level lvl, const char* msg, va_list args) {
             }
             __android_log_vprint(pri, "oryol", msg, args);
         #else
-            #if ORYOL_WINDOWS || ORYOL_PNACL
+            #if ORYOL_WINDOWS || ORYOL_PNACL || ORYOL_TRACING
             va_list argsCopy;
             va_copy(argsCopy, args);
             #endif
@@ -134,7 +135,7 @@ Log::vprint(Level lvl, const char* msg, va_list args) {
             // va_list, so we made a copy before if necessary
             std::vprintf(msg, args);
 
-            #if ORYOL_WINDOWS || ORYOL_PNACL
+            #if ORYOL_WINDOWS || ORYOL_PNACL || ORYOL_TRACING
                 char buf[LogBufSize];
                 std::vsnprintf(buf, sizeof(buf), msg, argsCopy);
                 buf[LogBufSize - 1] = 0;
@@ -144,6 +145,8 @@ Log::vprint(Level lvl, const char* msg, va_list args) {
                     if (pnaclInstance::HasInstance()) {
                         pnaclInstance::Instance()->putMsg(buf);
                     }
+                #elif ORYOL_TRACING
+                    ORYOL_TRACE_LOG_MESSAGE(lvlName, buf);
                 #endif
             #endif
         #endif

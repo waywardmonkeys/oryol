@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------
 #include "Pre.h"
 #include "MemoryStream.h"
+#include "Core/Trace.h"
 
 namespace Oryol {
 
@@ -55,6 +56,7 @@ MemoryStream::alloc(int32 newCapacity) {
     // allocate new buffer
     const int32 newBufSize = newCapacity;
     uchar* newBuffer = (uchar*) Memory::Alloc(newBufSize);
+    ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(newBuffer, "MemoryStream::storage");
     
     // need to move content?
     if (this->size > 0) {

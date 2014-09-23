@@ -6,6 +6,7 @@
 #include "stringAtomBuffer.h"
 #include "Core/Memory/Memory.h"
 #include "Core/Assert.h"
+#include "Core/Trace.h"
 
 namespace Oryol {
     
@@ -23,6 +24,7 @@ stringAtomBuffer::~stringAtomBuffer() {
 void
 stringAtomBuffer::allocChunk() {
     int8* newChunk = (int8*) Memory::Alloc(this->chunkSize);
+    ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(newChunk, "stringAtomBuffer::chunk");
     this->chunks.Add(newChunk);
     this->curPointer = newChunk;
 }

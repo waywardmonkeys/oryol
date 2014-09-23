@@ -10,6 +10,7 @@
 #include "Gfx/gl/gl_impl.h"
 #include "Gfx/gl/glInfo.h"
 #include "Core/Memory/Memory.h"
+#include "Core/Trace.h"
 
 namespace Oryol {
 namespace _priv {
@@ -148,6 +149,7 @@ glProgramBundleFactory::SetupResource(programBundle& progBundle) {
         ::glGetProgramiv(glProg, GL_INFO_LOG_LENGTH, &logLength);
         if (logLength > 0) {
             GLchar* logBuffer = (GLchar*) Memory::Alloc(logLength);
+            ORYOL_TRACE_ANNOTATE_ADDRESS_TYPE(logBuffer, "glGetProgramInfoDialog::buffer");
             ::glGetProgramInfoLog(glProg, logLength, &logLength, logBuffer);
             Log::Info("%s\n", logBuffer);
             Memory::Free(logBuffer);
